@@ -20,6 +20,7 @@
 */
 
 var exec = require('cordova/exec');
+var channel = require('cordova/channel');
 
 var namedColors = {
     "black": "#000000",
@@ -41,10 +42,6 @@ var namedColors = {
 var StatusBar = {
 
     isVisible: true,
-
-    overlaysWebView: function (doOverlay) {
-        exec(null, null, "StatusBar", "overlaysWebView", [doOverlay]);
-    },
 
     styleDefault: function () {
         // dark text ( to be used on a light background )
@@ -91,19 +88,32 @@ var StatusBar = {
     show: function () {
         exec(null, null, "StatusBar", "show", []);
         StatusBar.isVisible = true;
-    }
+    },
+
+    onTap: function(e) { }
 
 };
 
-// prime it
+var onTap = cordova.addWindowEventHandler('statustap');
+onTap.subscribe(function(e) {
+    StatusBar.onTap(e);
+});
+
+var onShow = cordova.addWindowEventHandler('statusshow');
+onShow.subscribe(function(e) {
+    StatusBar.isVisible = true;
+});
+
+var onHide = cordova.addWindowEventHandler('statushide');
+onShow.subscribe(function(e) {
+    StatusBar.isVisible = false;
+});
+
+// register our event callback
 exec(function (res) {
     if (typeof res == 'object') {
-        if (res.type == 'tap') {
-            cordova.fireWindowEvent('statusTap');
-        }
-    } else {
-        StatusBar.isVisible = res;
+        cordova.fireWindowEvent('status' + res.type, res.data);
     }
-}, null, "StatusBar", "_ready", []);
+}, null, "StatusBar", "registerEventCallback", []);
 
 module.exports = StatusBar;

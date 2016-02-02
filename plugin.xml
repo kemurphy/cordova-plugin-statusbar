@@ -55,6 +55,7 @@
 
     <!-- ios -->
     <platform name="ios">
+        <preference name="STATUS_BAR_STYLE" default="LightContent" />
 
         <config-file target="config.xml" parent="/*">
             <feature name="StatusBar">
@@ -62,7 +63,11 @@
                 <param name="onload" value="true" />
             </feature>
             <preference name="StatusBarOverlaysWebView" value="true" />
-            <preference name="StatusBarStyle" value="lightcontent" />
+            <preference name="StatusBarStyle" value="$STATUS_BAR_STYLE" />
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="UIStatusBarStyle">
+            <string>UIStatusBarStyle$STATUS_BAR_STYLE</string>
         </config-file>
 
         <header-file src="src/ios/CDVStatusBar.h" />

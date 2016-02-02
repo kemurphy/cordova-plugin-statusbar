@@ -22,16 +22,15 @@
 
 @interface CDVStatusBar : CDVPlugin {
     @protected
-    BOOL _statusBarOverlaysWebView;
-    UIView* _statusBarBackgroundView;
-    BOOL _uiviewControllerBasedStatusBarAppearance;
-    UIColor* _statusBarBackgroundColor;
-    NSString* _eventsCallbackId;
+    BOOL m_statusBarVisible;
+    UIStatusBarStyle m_statusBarStyle;
+    NSString* m_eventCallbackId;
+    BOOL m_uiviewControllerBasedStatusBarAppearance;
+    UIWindow *m_statusBarBackgroundView;
 }
 
-@property (atomic, assign) BOOL statusBarOverlaysWebView;
-
-- (void) overlaysWebView:(CDVInvokedUrlCommand*)command;
+@property (atomic, assign) BOOL statusBarVisible;
+@property (atomic, assign) UIStatusBarStyle statusBarStyle;
 
 - (void) styleDefault:(CDVInvokedUrlCommand*)command;
 - (void) styleLightContent:(CDVInvokedUrlCommand*)command;
@@ -40,10 +39,12 @@
 
 - (void) backgroundColorByName:(CDVInvokedUrlCommand*)command;
 - (void) backgroundColorByHexString:(CDVInvokedUrlCommand*)command;
-
+   
 - (void) hide:(CDVInvokedUrlCommand*)command;
 - (void) show:(CDVInvokedUrlCommand*)command;
-    
-- (void) _ready:(CDVInvokedUrlCommand*)command;
+
+- (void) registerEventCallback:(CDVInvokedUrlCommand*)command;
+- (void) fireEventCallback:(NSString*)type;
+- (void) fireEventCallback:(NSString*)type withData:(NSDictionary*)data;
 
 @end
